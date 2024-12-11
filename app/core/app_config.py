@@ -2,10 +2,9 @@ import os
 from dataclasses import field
 from typing import Any, Literal, Annotated
 
-from pydantic import BeforeValidator, AnyUrl, computed_field, model_validator
+from pydantic import BeforeValidator, AnyUrl, computed_field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing_extensions import Self
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -18,12 +17,13 @@ def parse_cors(v: Any) -> list[str] | str:
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=os.path.join(os.path.dirname(__file__), "../../.env.example"),
+        env_file=os.path.join(os.path.dirname(__file__), "../../.env"),
         env_ignore_empty=True,
         extra="ignore"
     )
 
     API_PREFIX: str = ""
+    TOKEN_ALGORITHM: str = ""
     SECRET_KEY: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     FRONTEND_URL: str = "http://localhost:4200"

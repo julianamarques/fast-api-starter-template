@@ -13,6 +13,10 @@ alembic = "^1.14.0"
 psycopg = "^3.2.3"
 sqlmodel = "^0.0.22"
 pydantic-settings = "^2.6.1"
+passlib = "^1.7.4"
+email-validator = "^2.2.0"
+pyjwt = "^2.10.1"
+python-multipart = "^0.0.19"
 
 
 [build-system]

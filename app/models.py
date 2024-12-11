@@ -13,6 +13,6 @@ class User(Base):
     id: Uuid = Column(Uuid, default=uuid.uuid4(), primary_key=True)
     name: str = Column(String(255), nullable=False)
     password: str = Column(String(255), nullable=False)
-    email: str = Column(String(255), nullable=False)
+    email: str = Column(String(255), nullable=False, unique=True)
     active: bool = Column(Boolean, nullable=False, default=True)
     admin: bool = Column(Boolean, nullable=False, default=False)
