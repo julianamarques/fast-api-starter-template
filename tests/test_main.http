@@ -1,0 +1,17 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/aplication/health/check
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/aplication/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+username=email1@teste.com&password=123456
+
+###
+
+GET http://127.0.0.1:8000/aplication/auth/me
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJlbWFpbDFAdGVzdGUuY29tIiwiZXhwIjoxNzM0NTYzNzg5fQ.DuPhiiTP6YifqpWWzFx_lJK2P1-nihgNWsz3gWDCLVU
