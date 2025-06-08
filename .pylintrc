@@ -1,0 +1,41 @@
+[MASTER]
+# Ignora pastas que normalmente não precisam ser analisadas
+ignore=migrations,alembic,tests
+extension-pkg-whitelist=pydantic
+
+[MESSAGES CONTROL]
+disable=
+    # Docstrings
+    C0114,  # missing-module-docstring
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+
+    # Estilo
+    C0301,  # line-too-long
+    C0411,  # wrong-import-order
+    R0913,  # too-many-arguments
+    R0914,  # too-many-locals
+    R0915,  # too-many-statements
+    R0903,  # too-few-public-methods
+    R1705,  # no-else-return
+
+    # Logging
+    W1203,  # logging-fstring-interpolation
+
+    # Wildcard imports (usado em Alembic às vezes)
+    W0401,  # wildcard-import
+    W0614,  # unused-wildcard-import
+
+    # Alembic e ORMs: falsos positivos
+    E1101,  # no-member
+
+[FORMAT]
+# Permite linhas mais longas (útil em FastAPI e docstrings)
+max-line-length=120
+
+[TYPECHECK]
+# Evita erros falsos com bibliotecas que usam metaprogramação
+ignored-modules=alembic.context,alembic.op,sqlmodel
+
+[DESIGN]
+max-args=8
