@@ -24,3 +24,6 @@ jobs:
     - name: Run Pylint
       run: |
         poetry run pylint $(git ls-files '*.py' ':!:alembic/versions/*')
+    - name: Run flake8
+      run: |
+        poetry run flake8
