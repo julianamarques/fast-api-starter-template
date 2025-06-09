@@ -1,6 +1,6 @@
 [MASTER]
 # Ignora pastas que normalmente não precisam ser analisadas
-ignore=migrations,alembic,tests
+ignore=migrations,alembic,tests,alembic/versions
 extension-pkg-whitelist=pydantic
 
 [MESSAGES CONTROL]
@@ -28,6 +28,7 @@ disable=
 
     # Alembic e ORMs: falsos positivos
     E1101,  # no-member
+    E0213  # Method should have "self" as first argument (pydantic false positive)
 
 [FORMAT]
 # Permite linhas mais longas (útil em FastAPI e docstrings)

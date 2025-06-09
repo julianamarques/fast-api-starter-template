@@ -32,7 +32,7 @@ async def http_exception_handler(
             status_code=exception.status_code,
             message=ApiMessageEnum.INVALID_REQUEST.value,
             path=request.url.path,
-            content=[exception.detail]
+            body=[exception.detail]
         )
     elif exception.status_code == status.HTTP_405_METHOD_NOT_ALLOWED:
         log.error(f"Method {request.method} not allowed for this route {request.url.path}", exc_info=exception)
@@ -41,7 +41,7 @@ async def http_exception_handler(
             status_code=exception.status_code,
             message=ApiMessageEnum.NOT_ALLOWED_METHOD.value,
             path=request.url.path,
-            content=[f"Método {request.method} não permitido para esta rota"]
+            body=[f"Método {request.method} não permitido para esta rota"]
         )
     elif exception.status_code == status.HTTP_401_UNAUTHORIZED:
         log.error(f"Access denied for this route {request.url.path}", exc_info=exception)
@@ -50,7 +50,7 @@ async def http_exception_handler(
             status_code=exception.status_code,
             message=ApiMessageEnum.ACCESS_DENIED.value,
             path=request.url.path,
-            content=[exception.detail]
+            body=[exception.detail]
         )
     elif exception.status_code == status.HTTP_401_UNAUTHORIZED:
         log.error(f"Access denied for this route {request.url.path}", exc_info=exception)
@@ -59,7 +59,7 @@ async def http_exception_handler(
             status_code=exception.status_code,
             message=ApiMessageEnum.ACCESS_DENIED.value,
             path=request.url.path,
-            content=[exception.detail]
+            body=[exception.detail]
         )
 
     return ApiExceptionResponse(
@@ -83,13 +83,13 @@ async def validation_exception_handler(
     log.error(f"Route: {request.url.path}", exc_info=exception)
     log.error(f"Validation errors: {errors}", exc_info=exception)
 
-    content = f"Argumentos inválidos [{errors}]"
+    body = f"Argumentos inválidos [{errors}]"
 
     return ApiExceptionResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         message=ApiMessageEnum.INVALID_ARGUMENT.value,
         path=request.url.path,
-        content=content
+        body=body
     )
 
 
@@ -100,5 +100,5 @@ async def internal_server_error_exeption_handler(request: Request, exception: Ex
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         message=ApiMessageEnum.UNKNOWN_ERROR.value,
         path=request.url.path,
-        content=[str(exception)]
+        body=[str(exception)]
     )

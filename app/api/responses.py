@@ -22,13 +22,14 @@ class ApiExceptionResponse(JSONResponse):
             message: str = ApiMessageEnum.UNKNOWN_ERROR.value,
             timestamp: str = datetime.now().isoformat(),
             path: str = "",
-            content: Optional[Any] = None):
+            body: Optional[Any] = None
+    ):
         data = {
             "status_code": status_code,
             "message": message,
             "timestamp": timestamp,
             "path": path,
-            "content": content,
+            "body": body,
         }
 
         super().__init__(status_code=status_code, content=data)

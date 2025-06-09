@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.responses import ApiResponse
 from app.core.database_config import Session
-from app.depends import get_db_session, get_auth_user
+from app.depends import get_db_session, get_auth_user as auth_user
 from app.schemas.auth_schema import (
     AuthUserResponseSchema,
     LoginRequestSchema,
@@ -46,7 +46,7 @@ async def create_user(schema: UserCreateRequestSchema,
 
 
 @router.get("/me", response_model=ApiResponse)
-async def get_auth_user(auth_user: AuthUserResponseSchema = Depends(get_auth_user)) -> ApiResponse:
+async def get_auth_user(auth_user_response: AuthUserResponseSchema = Depends(auth_user)) -> ApiResponse:
     return ApiResponse(
-        content=auth_user,
+        content=auth_user_response,
     )

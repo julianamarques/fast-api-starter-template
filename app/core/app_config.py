@@ -1,8 +1,7 @@
 import os
-from dataclasses import field
 from typing import Any, Literal, Annotated
 
-from pydantic import BeforeValidator, AnyUrl, computed_field
+from pydantic import BeforeValidator, AnyUrl, computed_field, Field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -28,9 +27,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     FRONTEND_URL: str = "http://localhost:4200"
     ENVIRONMENT: Literal["production", "development", "testing"] = "development"
-    BACKEND_CORS_ORIGINS: Annotated[
-        list[AnyUrl] | str, BeforeValidator(parse_cors)
-    ] = field(default_factory=list)
+    BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = Field(default_factory=list)
 
 
     @computed_field
