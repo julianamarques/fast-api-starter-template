@@ -49,7 +49,7 @@ class AuthService:
                           )
             expire_date: Any = datetime.fromtimestamp(
                 token_data["exp"]
-            ).isoformat() + "Z",
+            ).isoformat() + "Z"
 
             if not user:
                 self._raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
