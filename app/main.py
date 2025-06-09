@@ -9,7 +9,7 @@ from app.core.app_config import settings
 from app.handlers import (
     http_exception_handler,
     validation_exception_handler,
-    internal_server_error_exeption_handler
+    internal_server_error_exception_handler
 )
 
 
@@ -37,5 +37,5 @@ if settings.all_cors_origins:
 
 app.add_exception_handler(HTTPException, http_exception_handler)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
-app.add_exception_handler(Exception, internal_server_error_exeption_handler)
+app.add_exception_handler(Exception, internal_server_error_exception_handler)
 app.include_router(router, prefix=settings.API_PREFIX)

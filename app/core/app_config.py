@@ -52,8 +52,8 @@ class Settings(BaseSettings):
     POSTGRES_DATABASE: str = ""
     POSTGRES_SCHEME: str = ""
 
-    @computed_field
     @property
+    @computed_field
     def get_sqlalchemy_database_uri(self) -> MultiHostUrl:
         return MultiHostUrl.build(
             scheme=self.POSTGRES_SCHEME,

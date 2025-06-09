@@ -18,8 +18,12 @@ class AuthService:
         self.db_session = db_session
         self.user_service = UserService(db_session)
 
-    def login(self, schema: LoginRequestSchema) -> AuthUserResponseSchema:
-        user: User = self.user_service.find_user_by_email(schema.email)
+    def login(
+            self,
+            schema: LoginRequestSchema
+    ) -> AuthUserResponseSchema:
+        user: User = (self.user_service
+                      .find_user_by_email(schema.email))
         is_password_valid: bool = (
             encrypt_password_utils
             .verify_password(schema.password, user.password)
@@ -52,7 +56,9 @@ class AuthService:
             ).isoformat() + "Z"
 
             if not user:
-                self._raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
+                self._raise_unauthorized(
+                    ApiMessageEnum.INVALID_TOKEN.value
+                )
 
             return AuthUserResponseSchema(
                 access_token=access_token,
@@ -60,11 +66,15 @@ class AuthService:
                 user_data=UserResponseSchema.from_model(user)
             )
         except jwt.ExpiredSignatureError:
-            self._raise_unauthorized(ApiMessageEnum.EXPIRED_TOKEN.value)
+            self._raise_unauthorized(
+                ApiMessageEnum.EXPIRED_TOKEN.value
+            )
 
             return None
         except jwt.InvalidTokenError:
-            self._raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
+            self._raise_unauthorized(
+                ApiMessageEnum.INVALID_TOKEN.value
+            )
 
             return None
 

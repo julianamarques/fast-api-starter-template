@@ -5,6 +5,7 @@ from app.core.database_config import Session
 from app.schemas.auth_schema import AuthUserResponseSchema
 from app.services.auth_service import AuthService
 
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 

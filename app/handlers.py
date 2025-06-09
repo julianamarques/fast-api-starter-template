@@ -115,7 +115,7 @@ async def validation_exception_handler(
     )
 
 
-async def internal_server_error_exeption_handler(
+async def internal_server_error_exception_handler(
         request: Request,
         exception: Exception
 ) -> ApiExceptionResponse:
