@@ -26,17 +26,22 @@ class Settings(BaseSettings):
     SECRET_KEY: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     FRONTEND_URL: str = "http://localhost:4200"
-    ENVIRONMENT: Literal["production", "development", "testing"] = "development"
-    BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = Field(default_factory=list)
-
+    ENVIRONMENT: Literal[
+        "production",
+        "development",
+        "testing"
+    ] = "development"
+    BACKEND_CORS_ORIGINS: Annotated[
+        list[AnyUrl] | str, BeforeValidator(parse_cors)
+    ] = Field(default_factory=list)
 
     @computed_field
     @property
     def all_cors_origins(self) -> list[str]:
-        return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
-            self.FRONTEND_URL
+        return ([
+            str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS
         ]
-
+                + [self.FRONTEND_URL])
 
     PROJECT_NAME: str = ""
     VERSION: str = ""
@@ -46,7 +51,6 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DATABASE: str = ""
     POSTGRES_SCHEME: str = ""
-
 
     @computed_field
     @property
@@ -59,7 +63,6 @@ class Settings(BaseSettings):
             port=self.POSTGRES_PORT,
             path=self.POSTGRES_DATABASE,
         )
-
 
     ADMIN_USER: str = ""
     ADMIN_PASSWORD: str = ""

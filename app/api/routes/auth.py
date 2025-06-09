@@ -19,8 +19,10 @@ router = APIRouter()
 
 
 @router.post("/login", response_model=ApiResponse)
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-                db_session: Session = Depends(get_db_session)) -> ApiResponse:
+async def login(
+        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+        db_session: Session = Depends(get_db_session)
+) -> ApiResponse:
     auth_service = AuthService(db_session=db_session)
     schema = LoginRequestSchema(
         email=form_data.username,
@@ -35,8 +37,10 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 
 
 @router.post("/create-user", response_model=ApiResponse)
-async def create_user(schema: UserCreateRequestSchema,
-                      db_session: Session = Depends(get_db_session)) -> ApiResponse:
+async def create_user(
+        schema: UserCreateRequestSchema,
+        db_session: Session = Depends(get_db_session)
+) -> ApiResponse:
     user_service = UserService(db_session=db_session)
     data = user_service.create(schema=schema)
 
@@ -46,7 +50,9 @@ async def create_user(schema: UserCreateRequestSchema,
 
 
 @router.get("/me", response_model=ApiResponse)
-async def get_auth_user(auth_user_response: AuthUserResponseSchema = Depends(auth_user)) -> ApiResponse:
+async def get_auth_user(
+        auth_user_response: AuthUserResponseSchema = Depends(auth_user)
+) -> ApiResponse:
     return ApiResponse(
         content=auth_user_response,
     )

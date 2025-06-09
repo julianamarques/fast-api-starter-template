@@ -9,20 +9,17 @@ class UserCreateRequestSchema(BaseModel):
     password: str
     confirm_password: str
 
-
     @field_validator('name')
     def validate_name(cls, value):
         if not value:
             raise ValueError('Name is required')
         return value
 
-
     @field_validator('email')
     def validate_email(cls, value):
         if not value:
             raise ValueError('Email is required')
         return value
-
 
     @field_validator('password')
     def validate_password(cls, value):
@@ -41,13 +38,11 @@ class LoginRequestSchema(BaseModel):
     email: str = EmailStr()
     password: str
 
-
     @field_validator('email')
     def validate_email(cls, value):
         if not value:
             raise ValueError('Email é obrigatório')
         return value
-
 
     @field_validator('password')
     def validate_password(cls, value):

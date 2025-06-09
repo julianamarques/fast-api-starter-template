@@ -6,7 +6,9 @@ from app.core.app_config import settings
 
 
 def encode(username: str) -> dict:
-    expire_date = datetime.now() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire_date = datetime.now() + timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )
 
     payload = {
         "sub": username,

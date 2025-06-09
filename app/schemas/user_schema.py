@@ -13,9 +13,9 @@ class UserResponseSchema(BaseModel):
     @classmethod
     def from_model(cls, user: User):
         return cls(
-            name = user.name,
-            email = user.email,
-            password = user.password,
-            active = user.active,
-            admin = user.admin
+            name=user.name,
+            email=user.email,
+            password=user.password,
+            active=user.active,
+            admin=user.admin
         )

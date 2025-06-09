@@ -7,7 +7,6 @@ from sqlalchemy import pool
 from alembic import context
 from dotenv import load_dotenv
 
-from app.models import *
 from app.models.base import Base
 
 # this is the Alembic Config object, which provides

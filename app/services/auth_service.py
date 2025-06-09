@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 
 import jwt
 from fastapi import HTTPException, status
@@ -17,12 +18,17 @@ class AuthService:
         self.db_session = db_session
         self.user_service = UserService(db_session)
 
-
     def login(self, schema: LoginRequestSchema) -> AuthUserResponseSchema:
         user: User = self.user_service.find_user_by_email(schema.email)
+        is_password_valid: bool = (
+            encrypt_password_utils
+            .verify_password(schema.password, user.password)
+        )
 
-        if not user or not encrypt_password_utils.verify_password(schema.password, user.password):
-            self._raise_unauthorized(ApiMessageEnum.INVALID_USER_PASSWORD.value)
+        if not user or not is_password_valid:
+            self._raise_unauthorized(
+                ApiMessageEnum.INVALID_USER_PASSWORD.value
+            )
 
         token_data = token_utils.encode(username=schema.email)
 
@@ -32,18 +38,25 @@ class AuthService:
             user_data=UserResponseSchema.from_model(user)
         )
 
-
-    def get_auth_user(self, access_token: str) -> AuthUserResponseSchema | None:
+    def get_auth_user(
+            self,
+            access_token: str
+    ) -> AuthUserResponseSchema | None:
         try:
             token_data = token_utils.decode(access_token)
-            user: User = self.user_service.find_user_by_email(token_data["sub"])
+            user: User = (self.user_service
+                          .find_user_by_email(token_data["sub"])
+                          )
+            expire_date: Any = datetime.fromtimestamp(
+                token_data["exp"]
+            ).isoformat() + "Z",
 
             if not user:
                 self._raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
 
             return AuthUserResponseSchema(
                 access_token=access_token,
-                expires_in=datetime.fromtimestamp(token_data["exp"]).isoformat() + "Z",
+                expires_in=expire_date,
                 user_data=UserResponseSchema.from_model(user)
             )
         except jwt.ExpiredSignatureError:
@@ -54,7 +67,6 @@ class AuthService:
             self._raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
 
             return None
-
 
     def _raise_unauthorized(self, detail: str) -> None:
         raise HTTPException(

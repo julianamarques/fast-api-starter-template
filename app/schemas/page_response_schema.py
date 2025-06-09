@@ -2,7 +2,9 @@ from typing import List, Generic, TypeVar
 
 from pydantic import BaseModel
 
+
 T = TypeVar('T')
+
 
 class PageResponseSchema(BaseModel, Generic[T]):
     items: List[T]
