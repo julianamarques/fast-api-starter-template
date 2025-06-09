@@ -23,4 +23,4 @@ jobs:
         poetry install --no-root
     - name: Run Pylint
       run: |
-        poetry run pylint $(git ls-files '*.py')
+        poetry run pylint $(git ls-files '*.py' ':!:alembic/versions/*')

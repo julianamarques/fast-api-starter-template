@@ -20,6 +20,7 @@ class ApiExceptionResponse(JSONResponse):
             self,
             status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
             message: str = ApiMessageEnum.UNKNOWN_ERROR.value,
+            *,
             timestamp: str = datetime.now().isoformat(),
             path: str = "",
             body: Optional[Any] = None

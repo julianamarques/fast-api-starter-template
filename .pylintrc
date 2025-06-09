@@ -1,6 +1,6 @@
 [MASTER]
 # Ignora pastas que normalmente não precisam ser analisadas
-ignore=migrations,alembic,tests,alembic/versions
+ignore=migrations,alembic,tests
 extension-pkg-whitelist=pydantic
 
 [MESSAGES CONTROL]
