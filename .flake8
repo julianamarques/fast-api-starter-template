@@ -1,16 +1,5 @@
-[tool.flake8]
+[flake8]
 max-line-length = 120
-extend-ignore = [
-    "E203",
-    "W503",
-]
-exclude = [
-    ".env",
-    ".git",
-    "__pycache__",
-    "__init__.py",
-    "alembic/env.py",
-    "alembic/versions",
-    "migrations",
-    "tests",
-]
+extend-ignore = E203, W503
+exclude = .env, .git, __pycache__, __init__.py, alembic/, migrations, tests
+
