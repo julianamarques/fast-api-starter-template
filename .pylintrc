@@ -27,8 +27,9 @@ disable=
     W0614,  # unused-wildcard-import
 
     # Alembic e ORMs: falsos positivos
-    E1101,  # no-member
-    E0213  # Method should have "self" as first argument (pydantic false positive)
+    E1101, # no-member
+    E0213, # Method should have "self" as first argument (pydantic false positive)
+    E1136, # unsubscriptable-object
 
 [FORMAT]
 # Permite linhas mais longas (útil em FastAPI e docstrings)
