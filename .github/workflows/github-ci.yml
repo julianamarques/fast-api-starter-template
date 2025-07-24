@@ -1,4 +1,5 @@
-name: Pylint
+name: Github Actions CI
+run-name: ${{ github.actor }} started this job
 
 on: [push]
 
