@@ -23,8 +23,7 @@ class UserService:
         try:
             self._validate_password(schema.password, schema.confirm_password)
 
-            encrypted_password: str = (encrypt_password_utils
-                                       .hash_password(schema.password))
+            encrypted_password: str = encrypt_password_utils.hash_password(schema.password)
             user: User = User(
                 name=schema.name.strip(),
                 email=schema.email.lower().strip(),
@@ -37,10 +36,8 @@ class UserService:
             return UserResponseSchema.from_model(user)
         except IntegrityError as e:
             error_message = str(e)
-            is_email_exists_error: bool = ("unique constraint"
-                                           in error_message.lower()
-                                           and "email"
-                                           in error_message.lower())
+            is_email_exists_error: bool = ("unique constraint" in error_message.lower()
+                                           and "email" in error_message.lower())
 
             if is_email_exists_error:
                 self._raise_bad_request(
@@ -52,9 +49,7 @@ class UserService:
             return None
 
     def find_user_by_id(self, user_id: str) -> User:
-        user: User = (self.db_session.query(User)
-                      .filter_by(id=uuid.UUID(user_id))
-                      .first())
+        user: User = self.db_session.query(User).filter_by(id=uuid.UUID(user_id)).first()
 
         if not user:
             self._raise_not_found()
@@ -71,8 +66,7 @@ class UserService:
 
     def _validate_password(self, password: str, confirm_password: str) -> None:
         password_is_null: bool = not password and not confirm_password
-        invalid_password: bool = (not password_is_null
-                                  and password != confirm_password)
+        invalid_password: bool = not password_is_null and password != confirm_password
 
         if password_is_null:
             self._raise_bad_request(

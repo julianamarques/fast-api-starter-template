@@ -22,12 +22,8 @@ class AuthService:
             self,
             schema: LoginRequestSchema
     ) -> AuthUserResponseSchema:
-        user: User = (self.user_service
-                      .find_user_by_email(schema.email))
-        is_password_valid: bool = (
-            encrypt_password_utils
-            .verify_password(schema.password, user.password)
-        )
+        user: User = self.user_service.find_user_by_email(schema.email)
+        is_password_valid: bool = encrypt_password_utils.verify_password(schema.password, user.password)
 
         if not user or not is_password_valid:
             self._raise_unauthorized(
@@ -48,12 +44,8 @@ class AuthService:
     ) -> AuthUserResponseSchema | None:
         try:
             token_data = token_utils.decode(access_token)
-            user: User = (self.user_service
-                          .find_user_by_email(token_data["sub"])
-                          )
-            expire_date: Any = datetime.fromtimestamp(
-                token_data["exp"]
-            ).isoformat() + "Z"
+            user: User = self.user_service.find_user_by_email(token_data["sub"])
+            expire_date: Any = datetime.fromtimestamp(token_data["exp"]).isoformat() + "Z"
 
             if not user:
                 self._raise_unauthorized(

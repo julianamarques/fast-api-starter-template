@@ -1,7 +1,7 @@
 import os
 from typing import Any, Literal, Annotated
 
-from pydantic import BeforeValidator, AnyUrl, computed_field, Field
+from pydantic import BeforeValidator, AnyUrl, Field
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -35,13 +35,9 @@ class Settings(BaseSettings):
         list[AnyUrl] | str, BeforeValidator(parse_cors)
     ] = Field(default_factory=list)
 
-    @computed_field
     @property
     def all_cors_origins(self) -> list[str]:
-        return ([
-            str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS
-        ]
-                + [self.FRONTEND_URL])
+        return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [self.FRONTEND_URL]
 
     PROJECT_NAME: str = ""
     VERSION: str = ""
@@ -53,7 +49,6 @@ class Settings(BaseSettings):
     POSTGRES_SCHEME: str = ""
 
     @property
-    @computed_field
     def get_sqlalchemy_database_uri(self) -> MultiHostUrl:
         return MultiHostUrl.build(
             scheme=self.POSTGRES_SCHEME,
