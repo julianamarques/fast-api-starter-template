@@ -2,7 +2,6 @@ from datetime import datetime
 from typing import Any
 
 import jwt
-from fastapi import HTTPException, status
 
 from app.core.database_config import Session
 from app.enums import ApiMessageEnum
@@ -10,7 +9,7 @@ from app.models.user import User
 from app.schemas.auth_schema import AuthUserResponseSchema, LoginRequestSchema
 from app.schemas.user_schema import UserResponseSchema
 from app.services.user_service import UserService
-from app.utils import token_utils, encrypt_password_utils
+from app.utils import token_utils, encrypt_password_utils, exceptions_utils
 
 
 class AuthService:
@@ -18,17 +17,12 @@ class AuthService:
         self.db_session = db_session
         self.user_service = UserService(db_session)
 
-    def login(
-            self,
-            schema: LoginRequestSchema
-    ) -> AuthUserResponseSchema:
+    def login(self, schema: LoginRequestSchema) -> AuthUserResponseSchema:
         user: User = self.user_service.find_user_by_email(schema.email)
         is_password_valid: bool = encrypt_password_utils.verify_password(schema.password, user.password)
 
         if not user or not is_password_valid:
-            self._raise_unauthorized(
-                ApiMessageEnum.INVALID_USER_PASSWORD.value
-            )
+            exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_USER_PASSWORD.value)
 
         token_data = token_utils.encode(username=schema.email)
 
@@ -48,9 +42,7 @@ class AuthService:
             expire_date: Any = datetime.fromtimestamp(token_data["exp"]).isoformat() + "Z"
 
             if not user:
-                self._raise_unauthorized(
-                    ApiMessageEnum.INVALID_TOKEN.value
-                )
+                exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
 
             return AuthUserResponseSchema(
                 access_token=access_token,
@@ -58,20 +50,10 @@ class AuthService:
                 user_data=UserResponseSchema.from_model(user)
             )
         except jwt.ExpiredSignatureError:
-            self._raise_unauthorized(
-                ApiMessageEnum.EXPIRED_TOKEN.value
-            )
+            exceptions_utils.raise_unauthorized(ApiMessageEnum.EXPIRED_TOKEN.value)
 
             return None
         except jwt.InvalidTokenError:
-            self._raise_unauthorized(
-                ApiMessageEnum.INVALID_TOKEN.value
-            )
+            exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
 
             return None
-
-    def _raise_unauthorized(self, detail: str) -> None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=detail,
-        )
