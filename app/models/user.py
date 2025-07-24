@@ -9,7 +9,7 @@ from app.models.base import Base
 class User(Base):
     __tablename__ = 'user'
 
-    id: Mapped[Uuid] = mapped_column(Uuid,nullable=False, default=uuid.uuid4, primary_key=True)
+    id: Mapped[Uuid] = mapped_column(Uuid, nullable=False, default=uuid.uuid4, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(255), nullable=False)
