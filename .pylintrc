@@ -30,6 +30,7 @@ disable=
     E1101, # no-member
     E0213, # Method should have "self" as first argument (pydantic false positive)
     E1136, # unsubscriptable-object
+    E1102, # no-callable
 
 [FORMAT]
 # Permite linhas mais longas (útil em FastAPI e docstrings)
