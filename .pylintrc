@@ -22,18 +22,17 @@ disable=
     # Logging
     W1203,  # logging-fstring-interpolation
 
-    # Wildcard imports (usado em Alembic às vezes)
+    # Wildcard imports
     W0401,  # wildcard-import
     W0614,  # unused-wildcard-import
 
     # Alembic e ORMs: falsos positivos
     E1101, # no-member
-    E0213, # Method should have "self" as first argument (pydantic false positive)
+    E0213, # Method should have "self" as first argument
     E1136, # unsubscriptable-object
     E1102, # no-callable
 
 [FORMAT]
-# Permite linhas mais longas (útil em FastAPI e docstrings)
 max-line-length=120
 
 [TYPECHECK]
