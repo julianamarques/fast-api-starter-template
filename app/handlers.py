@@ -18,10 +18,7 @@ async def http_exception_handler(
         exception: Union[HTTPException, Exception]
 ) -> ApiExceptionResponse:
     if exception.status_code == status.HTTP_404_NOT_FOUND:
-        log.error(
-            f"Route {request.url.path} not found!",
-            exc_info=exception
-        )
+        log.error(f"Route {request.url.path} not found: {exception.detail}")
 
         return ApiExceptionResponse(
             status_code=exception.status_code,
@@ -29,10 +26,7 @@ async def http_exception_handler(
             path=request.url.path
         )
     elif exception.status_code == status.HTTP_400_BAD_REQUEST:
-        log.error(
-            f"Invalid request for this route {request.url.path}",
-            exc_info=exception
-        )
+        log.error(f"Invalid request for this route {request.url.path}: {exception.detail}")
 
         return ApiExceptionResponse(
             status_code=exception.status_code,
@@ -41,11 +35,7 @@ async def http_exception_handler(
             body=[exception.detail]
         )
     elif exception.status_code == status.HTTP_405_METHOD_NOT_ALLOWED:
-        log.error(
-            f"Method {request.method} not allowed "
-            f"for this route {request.url.path}",
-            exc_info=exception
-        )
+        log.error(f"Method {request.method} not allowed for this route {request.url.path}")
 
         return ApiExceptionResponse(
             status_code=exception.status_code,
@@ -54,22 +44,7 @@ async def http_exception_handler(
             body=[f"Método {request.method} não permitido para esta rota"]
         )
     elif exception.status_code == status.HTTP_401_UNAUTHORIZED:
-        log.error(
-            f"Access denied for this route {request.url.path}",
-            exc_info=exception
-        )
-
-        return ApiExceptionResponse(
-            status_code=exception.status_code,
-            message=ApiMessageEnum.ACCESS_DENIED.value,
-            path=request.url.path,
-            body=[exception.detail]
-        )
-    elif exception.status_code == status.HTTP_401_UNAUTHORIZED:
-        log.error(
-            f"Access denied for this route {request.url.path}",
-            exc_info=exception
-        )
+        log.error(f"Access denied for this route {request.url.path}")
 
         return ApiExceptionResponse(
             status_code=exception.status_code,
