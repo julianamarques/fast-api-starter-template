@@ -1,17 +1,21 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from starlette import status
 from starlette.responses import JSONResponse
 
 from app.enums import ApiMessageEnum
 
 
+def _current_timestamp() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
 class ApiResponse(BaseModel):
     status_code: int = status.HTTP_200_OK
     message: str = ApiMessageEnum.REQUEST_COMPLETED.value
-    timestamp: str = datetime.now().isoformat()
+    timestamp: str = Field(default_factory=_current_timestamp)
     content: Optional[Any] = None
 
 
@@ -21,14 +25,13 @@ class ApiExceptionResponse(JSONResponse):
             status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
             message: str = ApiMessageEnum.UNKNOWN_ERROR.value,
             *,
-            timestamp: str = datetime.now().isoformat(),
             path: str = "",
             body: Optional[Any] = None
     ):
         data = {
             "status_code": status_code,
             "message": message,
-            "timestamp": timestamp,
+            "timestamp": _current_timestamp(),
             "path": path,
             "body": body,
         }

@@ -1,5 +1,4 @@
-from datetime import datetime
-from typing import Any
+from datetime import datetime, timezone
 
 import jwt
 
@@ -12,19 +11,27 @@ from app.services.user_service import UserService
 from app.utils import token_utils, encrypt_password_utils, exceptions_utils
 
 
+_DUMMY_PASSWORD_HASH = encrypt_password_utils.hash_password("dummy-password")
+
+
 class AuthService:
     def __init__(self, db_session: Session):
         self.db_session = db_session
         self.user_service = UserService(db_session)
 
     def login(self, schema: LoginRequestSchema) -> AuthUserResponseSchema:
-        user: User = self.user_service.find_user_by_email(schema.email)
-        is_password_valid: bool = encrypt_password_utils.verify_password(schema.password, user.password)
+        email: str = schema.email.lower().strip()
+        user: User | None = self.user_service.find_user_by_email(email)
+        hashed_password: str = user.password if user else _DUMMY_PASSWORD_HASH
+        is_password_valid: bool = encrypt_password_utils.verify_password(schema.password, hashed_password)
 
         if not user or not is_password_valid:
             exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_USER_PASSWORD.value)
 
-        token_data = token_utils.encode(username=schema.email)
+        if not user.active:
+            exceptions_utils.raise_unauthorized(ApiMessageEnum.INACTIVE_USER.value)
+
+        token_data = token_utils.encode(username=user.email)
 
         return AuthUserResponseSchema(
             access_token=token_data["access_token"],
@@ -38,11 +45,15 @@ class AuthService:
     ) -> AuthUserResponseSchema | None:
         try:
             token_data = token_utils.decode(access_token)
-            user: User = self.user_service.find_user_by_email(token_data["sub"])
-            expire_date: Any = datetime.fromtimestamp(token_data["exp"]).isoformat() + "Z"
+            user: User | None = self.user_service.find_user_by_email(token_data["sub"])
 
             if not user:
                 exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
+
+            if not user.active:
+                exceptions_utils.raise_unauthorized(ApiMessageEnum.INACTIVE_USER.value)
+
+            expire_date: str = datetime.fromtimestamp(token_data["exp"], tz=timezone.utc).isoformat()
 
             return AuthUserResponseSchema(
                 access_token=access_token,

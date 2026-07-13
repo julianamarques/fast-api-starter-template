@@ -12,12 +12,7 @@ from app.utils import encrypt_password_utils, exceptions_utils
 
 
 def _validate_password(password: str, confirm_password: str) -> None:
-    password_is_null: bool = not password and not confirm_password
-    invalid_password: bool = not password_is_null and password != confirm_password
-
-    if password_is_null:
-        exceptions_utils.raise_bad_request(ApiMessageEnum.USER_PASSWORD_MANDATORY.value)
-    elif invalid_password:
+    if password != confirm_password:
         exceptions_utils.raise_bad_request(ApiMessageEnum.USER_PASSWORDS_DO_NOT_MATCH.value)
 
 
@@ -25,7 +20,7 @@ class UserService:
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
-    def create(self, schema: UserCreateRequestSchema) -> UserResponseSchema | None:
+    def create(self, schema: UserCreateRequestSchema) -> UserResponseSchema:
         try:
             _validate_password(schema.password, schema.confirm_password)
 
@@ -40,17 +35,14 @@ class UserService:
             self.db_session.flush()
 
             return UserResponseSchema.from_model(user)
-        except IntegrityError as e:
-            error_message = str(e)
-            is_email_exists_error: bool = ("unique constraint" in error_message.lower()
-                                           and "email" in error_message.lower())
+        except IntegrityError as error:
+            error_message = str(error).lower()
+            is_email_exists_error: bool = "unique constraint" in error_message and "email" in error_message
 
             if is_email_exists_error:
                 exceptions_utils.raise_bad_request(ApiMessageEnum.USER_EMAIL_EXISTS.value)
 
-                return None
-
-            return None
+            raise
 
     def find_user_by_id(self, user_id: str) -> User:
         user: User = self.db_session.query(User).filter_by(id=uuid.UUID(user_id)).first()
@@ -60,10 +52,5 @@ class UserService:
 
         return user
 
-    def find_user_by_email(self, email: str) -> User:
-        user: User = self.db_session.query(User).filter_by(email=email).first()
-
-        if not user:
-            exceptions_utils.raise_not_found(ApiMessageEnum.USER_NOT_FOUND.value)
-
-        return user
+    def find_user_by_email(self, email: str) -> User | None:
+        return self.db_session.query(User).filter_by(email=email).first()

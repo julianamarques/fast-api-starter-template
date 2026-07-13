@@ -1,54 +1,18 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, EmailStr, Field
 
 from app.schemas.user_schema import UserResponseSchema
 
 
 class UserCreateRequestSchema(BaseModel):
     name: str = Field(min_length=3, max_length=255)
-    email: str = EmailStr()
-    password: str
-    confirm_password: str
-
-    @field_validator('name')
-    def validate_name(cls, value):
-        if not value:
-            raise ValueError('Name is required')
-        return value
-
-    @field_validator('email')
-    def validate_email(cls, value):
-        if not value:
-            raise ValueError('Email is required')
-        return value
-
-    @field_validator('password')
-    def validate_password(cls, value):
-        if not value:
-            raise ValueError('Password is required')
-        return value
-
-    @field_validator('confirm_password')
-    def validate_confirm_password(cls, value):
-        if not value:
-            raise ValueError('Confirm Password is required')
-        return value
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=72)
+    confirm_password: str = Field(min_length=8, max_length=72)
 
 
 class LoginRequestSchema(BaseModel):
-    email: str = EmailStr()
+    email: str
     password: str
-
-    @field_validator('email')
-    def validate_email(cls, value):
-        if not value:
-            raise ValueError('Email é obrigatório')
-        return value
-
-    @field_validator('password')
-    def validate_password(cls, value):
-        if not value:
-            raise ValueError('Senha é obrigatória')
-        return value
 
 
 class AuthUserResponseSchema(BaseModel):

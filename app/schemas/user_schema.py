@@ -6,7 +6,6 @@ from app.models.user import User
 class UserResponseSchema(BaseModel):
     name: str
     email: str
-    password: str
     active: bool
     admin: bool
 
@@ -15,7 +14,6 @@ class UserResponseSchema(BaseModel):
         return cls(
             name=user.name,
             email=user.email,
-            password=user.password,
             active=user.active,
             admin=user.admin
         )

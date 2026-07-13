@@ -15,6 +15,7 @@ class ApiMessageEnum(Enum):
     INVALID_TOKEN = "Token invalido"
     EXPIRED_TOKEN = "Token expirado"
     USER_NOT_FOUND = "Usuário não encontrado"
+    INACTIVE_USER = "Usuário inativo"
     USER_EMAIL_EXISTS = "Já existe um usuário com esse email"
     INVALID_USER_PASSWORD = "Usuário ou senha inválidos"
     USER_PASSWORD_MANDATORY = "A senha é obrigatória"

@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.responses import ApiResponse
@@ -36,7 +36,7 @@ async def login(
     )
 
 
-@router.post("/create-user", response_model=ApiResponse)
+@router.post("/create-user", response_model=ApiResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(
         schema: UserCreateRequestSchema,
         db_session: Session = Depends(get_db_session)
@@ -45,6 +45,7 @@ async def create_user(
     data = user_service.create(schema=schema)
 
     return ApiResponse(
+        status_code=status.HTTP_201_CREATED,
         content=data,
     )
 

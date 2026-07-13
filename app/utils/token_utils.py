@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import jwt
 
@@ -6,7 +6,7 @@ from app.core.app_config import settings
 
 
 def encode(username: str) -> dict:
-    expire_date = datetime.now() + timedelta(
+    expire_date = datetime.now(timezone.utc) + timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
 

@@ -41,7 +41,7 @@ async def http_exception_handler(
             status_code=exception.status_code,
             message=ApiMessageEnum.NOT_ALLOWED_METHOD.value,
             path=request.url.path,
-            body=[f"Método {request.method} não permitido para esta rota"]
+            body=[f"Method {request.method} not allowed for this route"]
         )
     elif exception.status_code == status.HTTP_401_UNAUTHORIZED:
         log.error(f"Access denied for this route {request.url.path}")
@@ -80,7 +80,7 @@ async def validation_exception_handler(
         exc_info=exception
     )
 
-    body = f"Argumentos inválidos [{errors}]"
+    body = f"Invalid arguments [{errors}]"
 
     return ApiExceptionResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -102,6 +102,5 @@ async def internal_server_error_exception_handler(
     return ApiExceptionResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         message=ApiMessageEnum.UNKNOWN_ERROR.value,
-        path=request.url.path,
-        body=[str(exception)]
+        path=request.url.path
     )
