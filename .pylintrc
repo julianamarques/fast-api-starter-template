@@ -32,6 +32,10 @@ disable=
     E1136, # unsubscriptable-object
     E1102, # no-callable
 
+[BASIC]
+# Session é o nome idiomático do sessionmaker do SQLAlchemy
+good-names=i,j,k,ex,Run,_,Session
+
 [FORMAT]
 max-line-length=120
 

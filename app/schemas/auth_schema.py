@@ -1,6 +1,7 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.schemas.user_schema import UserResponseSchema
+from app.utils.encrypt_password_utils import MAX_PASSWORD_BYTES
 
 
 class UserCreateRequestSchema(BaseModel):
@@ -8,6 +9,13 @@ class UserCreateRequestSchema(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8, max_length=72)
     confirm_password: str = Field(min_length=8, max_length=72)
+
+    @field_validator("password")
+    def validate_password_size(cls, value: str) -> str:
+        if len(value.encode("utf-8")) > MAX_PASSWORD_BYTES:
+            raise ValueError(f"Password must be at most {MAX_PASSWORD_BYTES} bytes")
+
+        return value
 
 
 class LoginRequestSchema(BaseModel):

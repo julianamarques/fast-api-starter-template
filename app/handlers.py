@@ -83,7 +83,7 @@ async def validation_exception_handler(
     body = f"Invalid arguments [{errors}]"
 
     return ApiExceptionResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         message=ApiMessageEnum.INVALID_ARGUMENT.value,
         path=request.url.path,
         body=body

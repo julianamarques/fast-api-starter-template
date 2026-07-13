@@ -4,7 +4,7 @@ Projeto template com algumas configurações comuns já feitas e autenticação 
 
 ## Requisitos Necessários 💻
 
-* Python 3.10
+* Python 3.12
 * Poetry 2.x
 
 ## Como usar? ⚙️
