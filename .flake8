@@ -1,5 +1,5 @@
 [flake8]
 max-line-length = 120
 extend-ignore = E203, W503
-exclude = .env, .git, __pycache__, __init__.py, alembic/, migrations, tests
+exclude = .env, .git, __pycache__, __init__.py, alembic/, migrations
 

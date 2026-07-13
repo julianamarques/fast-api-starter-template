@@ -39,8 +39,8 @@ class Settings(BaseSettings):
     def all_cors_origins(self) -> list[str]:
         return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [self.FRONTEND_URL]
 
-    PROJECT_NAME: str = ""
-    VERSION: str = ""
+    PROJECT_NAME: str = "Fast API Starter Template"
+    VERSION: str = "0.1.0"
     POSTGRES_SERVER: str = ""
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = ""

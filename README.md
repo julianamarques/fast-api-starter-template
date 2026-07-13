@@ -31,6 +31,12 @@ alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
+### Executando os Testes 🧪
+
+```sh
+poetry run pytest
+```
+
 ## Contribuições 🤝
 
 Contribuições são bem-vindas! Sinta-se à vontade para abrir um pull request para propor melhorias ou correções.

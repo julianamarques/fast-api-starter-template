@@ -42,8 +42,9 @@ db: cria migration para tabela de usuários
 Antes de abrir um pull request, rode as verificações aplicáveis:
 
 ```sh
-poetry run flake8 app tests
-poetry run pylint app
+poetry run flake8
+poetry run pylint app tests
+poetry run pytest
 ```
 
 Também revise se:

@@ -42,7 +42,7 @@ class AuthService:
     def get_auth_user(
             self,
             access_token: str
-    ) -> AuthUserResponseSchema | None:
+    ) -> AuthUserResponseSchema:
         try:
             token_data = token_utils.decode(access_token)
             user: User | None = self.user_service.find_user_by_email(token_data["sub"])
@@ -62,9 +62,5 @@ class AuthService:
             )
         except jwt.ExpiredSignatureError:
             exceptions_utils.raise_unauthorized(ApiMessageEnum.EXPIRED_TOKEN.value)
-
-            return None
         except jwt.InvalidTokenError:
             exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
-
-            return None

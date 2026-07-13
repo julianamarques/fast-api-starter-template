@@ -23,8 +23,8 @@ def upgrade() -> None:
         sa.Column('name', sa.String(length=255), nullable=False),
         sa.Column('email', sa.String(length=255), nullable=False),
         sa.Column('password', sa.String(length=255), nullable=False),
-        sa.Column('active', sa.Boolean(), nullable=False, default=True),
-        sa.Column('admin', sa.Boolean(), nullable=False, default=False),
+        sa.Column('active', sa.Boolean(), nullable=False, server_default=sa.true()),
+        sa.Column('admin', sa.Boolean(), nullable=False, server_default=sa.false()),
         sa.PrimaryKeyConstraint('id'),
         sa.UniqueConstraint('email')
     )

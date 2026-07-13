@@ -50,7 +50,8 @@ async def http_exception_handler(
             status_code=exception.status_code,
             message=ApiMessageEnum.ACCESS_DENIED.value,
             path=request.url.path,
-            body=[exception.detail]
+            body=[exception.detail],
+            headers={"WWW-Authenticate": "Bearer"}
         )
 
     return ApiExceptionResponse(
@@ -72,11 +73,7 @@ async def validation_exception_handler(
         errors.append(f"{loc}: {msg}")
 
     log.error(
-        f"Route: {request.url.path}",
-        exc_info=exception
-    )
-    log.error(
-        f"Validation errors: {errors}",
+        f"Validation errors on route {request.url.path}: {errors}",
         exc_info=exception
     )
 

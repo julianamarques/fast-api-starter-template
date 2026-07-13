@@ -1,7 +1,10 @@
 name: Github Actions CI
 run-name: ${{ github.actor }} started this job
 
-on: [push]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 jobs:
   build:
@@ -12,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Poetry
@@ -28,3 +31,6 @@ jobs:
     - name: Run flake8
       run: |
         poetry run flake8
+    - name: Run tests
+      run: |
+        poetry run pytest
