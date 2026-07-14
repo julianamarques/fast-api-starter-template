@@ -20,7 +20,6 @@ python-multipart = "^0.0.32"
 pandas = "^3.0.3"
 poetry-core = "^2.4.1"
 
-
 [tool.poetry.group.dev.dependencies]
 pylint = "^4.0.6"
 flake8 = "^7.3.0"

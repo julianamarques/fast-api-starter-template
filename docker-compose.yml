@@ -1,0 +1,21 @@
+x-app-common: &app-common
+  build: .
+  env_file:
+    - .env
+  environment:
+    POSTGRES_SERVER: host.docker.internal
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+services:
+  migrations:
+    <<: *app-common
+    command: alembic upgrade head
+
+  app:
+    <<: *app-common
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrations:
+        condition: service_completed_successfully

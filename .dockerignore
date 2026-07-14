@@ -1,0 +1,27 @@
+# Segredos ficam fora da imagem; injete-os em tempo de execução (--env-file)
+.env
+.env.example
+
+# Controle de versão e IDE
+.git
+.github
+.gitignore
+.idea
+
+# Python
+__pycache__
+*.pyc
+.venv
+.pytest_cache
+
+# Testes e qualidade
+tests
+.flake8
+.pylintrc
+
+# Docs
+*.md
+
+# Docker
+Dockerfile
+.dockerignore
