@@ -41,7 +41,7 @@ max-line-length=120
 
 [TYPECHECK]
 # Evita erros falsos com bibliotecas que usam metaprogramação
-ignored-modules=alembic.context,alembic.op,sqlmodel
+ignored-modules=alembic.context,alembic.op
 
 [DESIGN]
 max-args=8
