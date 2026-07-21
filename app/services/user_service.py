@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy.exc import IntegrityError
 
 from app.core.database_config import Session
@@ -43,14 +41,6 @@ class UserService:
                 exceptions_utils.raise_bad_request(ApiMessageEnum.USER_EMAIL_EXISTS.value)
 
             raise
-
-    def find_user_by_id(self, user_id: str) -> User:
-        user: User = self.db_session.query(User).filter_by(id=uuid.UUID(user_id)).first()
-
-        if not user:
-            exceptions_utils.raise_not_found(ApiMessageEnum.USER_NOT_FOUND.value)
-
-        return user
 
     def find_user_by_email(self, email: str) -> User | None:
         return self.db_session.query(User).filter_by(email=email).first()
