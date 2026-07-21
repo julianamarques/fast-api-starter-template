@@ -22,3 +22,10 @@ def raise_unauthorized(detail: str) -> NoReturn:
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail=detail,
     )
+
+
+def raise_service_unavailable(detail: str) -> NoReturn:
+    raise HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail=detail,
+    )
