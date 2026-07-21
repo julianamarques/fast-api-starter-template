@@ -44,6 +44,22 @@ class Settings(BaseSettings):
 
         return origins
 
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT == "production"
+
+    @property
+    def openapi_url(self) -> str | None:
+        return None if self.is_production else f"{self.API_PREFIX}/openapi.json"
+
+    @property
+    def docs_url(self) -> str | None:
+        return None if self.is_production else "/docs"
+
+    @property
+    def redoc_url(self) -> str | None:
+        return None if self.is_production else "/redoc"
+
     PROJECT_NAME: str = "Fast API Starter Template"
     VERSION: str = "0.1.0"
     POSTGRES_SERVER: str = ""
