@@ -24,6 +24,19 @@ def test_create_user_with_duplicated_email_returns_400(client):
     assert "Já existe um usuário com esse email" in response.json()["body"]
 
 
+def test_create_user_duplicated_email_race_falls_back_to_integrity_error(client, monkeypatch):
+    create_user(client)
+    monkeypatch.setattr(
+        "app.services.user_service.UserService.find_user_by_email",
+        lambda self, email: None,
+    )
+
+    response = create_user(client)
+
+    assert response.status_code == 400
+    assert "Já existe um usuário com esse email" in response.json()["body"]
+
+
 def test_create_user_with_mismatched_passwords_returns_400(client):
     response = create_user(client, confirm_password="outra-senha-123")
 

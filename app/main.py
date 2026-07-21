@@ -14,7 +14,10 @@ from app.handlers import (
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
-    return f"{route.tags[0]}-{route.name}"
+    if route.tags:
+        return f"{route.tags[0]}-{route.name}"
+
+    return route.name
 
 
 app = FastAPI(
