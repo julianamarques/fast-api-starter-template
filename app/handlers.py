@@ -66,15 +66,21 @@ async def validation_exception_handler(
         exception: Union[RequestValidationError, Exception]
 ) -> ApiExceptionResponse:
     errors = []
+    safe_log_errors = []
 
     for error in exception.errors():
         loc = " -> ".join(map(str, error["loc"]))
         msg = error["msg"]
         errors.append(f"{loc}: {msg}")
+        safe_log_errors.append({
+            "location": loc,
+            "type": error["type"],
+        })
 
-    log.error(
-        f"Validation errors on route {request.url.path}: {errors}",
-        exc_info=exception
+    log.warning(
+        "Validation errors on route %s: %s",
+        request.url.path,
+        safe_log_errors,
     )
 
     body = f"Invalid arguments [{errors}]"

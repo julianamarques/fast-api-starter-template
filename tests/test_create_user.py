@@ -1,3 +1,5 @@
+import logging
+
 from tests.utils import create_user
 
 
@@ -55,6 +57,26 @@ def test_create_user_with_short_password_returns_422(client):
     response = create_user(client, password="curta12", confirm_password="curta12")
 
     assert response.status_code == 422
+
+
+def test_validation_error_does_not_log_passwords(client, caplog):
+    password = "secret1"
+    confirm_password = "secret2"
+
+    with caplog.at_level(logging.WARNING, logger="app.handlers"):
+        response = create_user(
+            client,
+            password=password,
+            confirm_password=confirm_password,
+        )
+
+    handler_records = [record for record in caplog.records if record.name == "app.handlers"]
+
+    assert response.status_code == 422
+    assert handler_records
+    assert password not in caplog.text
+    assert confirm_password not in caplog.text
+    assert all(record.exc_info is None for record in handler_records)
 
 
 def test_create_user_with_password_over_72_bytes_returns_422(client):
