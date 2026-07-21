@@ -25,11 +25,8 @@ class AuthService:
         hashed_password: str = user.password if user else _DUMMY_PASSWORD_HASH
         is_password_valid: bool = encrypt_password_utils.verify_password(schema.password, hashed_password)
 
-        if not user or not is_password_valid:
+        if not user or not is_password_valid or not user.active:
             exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_USER_PASSWORD.value)
-
-        if not user.active:
-            exceptions_utils.raise_unauthorized(ApiMessageEnum.INACTIVE_USER.value)
 
         token_data = token_utils.encode(username=user.email)
 

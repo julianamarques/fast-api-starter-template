@@ -32,14 +32,17 @@ def test_login_failures_are_indistinguishable(client):
     assert elapsed > 0.02
 
 
-def test_inactive_user_cannot_login(client, db_session_factory):
+def test_inactive_user_login_is_indistinguishable_from_invalid(client, db_session_factory):
     create_user(client)
+
     with db_session_factory() as session:
-        user = session.query(User).filter_by(email="julia@test.com").one()
+        user = session.query(User).filter_by(email="juliana@test.com").one()
         user.active = False
         session.commit()
 
-    response = login(client)
+    inactive = login(client)  # senha correta, mas conta inativa
+    wrong_password = login(client, password="senha-errada-1")
 
-    assert response.status_code == 401
-    assert "Usuário inativo" in response.json()["body"]
+    assert inactive.status_code == wrong_password.status_code == 401
+    assert inactive.json()["message"] == wrong_password.json()["message"]
+    assert inactive.json()["body"] == wrong_password.json()["body"]

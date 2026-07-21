@@ -19,7 +19,7 @@ def test_me_returns_authenticated_user(client):
 
     assert response.status_code == 200
     content = response.json()["content"]
-    assert content["user_data"]["email"] == "julia@test.com"
+    assert content["user_data"]["email"] == "juliana@test.com"
     assert "password" not in content["user_data"]
 
 
@@ -40,7 +40,7 @@ def test_me_with_invalid_token_returns_401(client):
 def test_me_with_expired_token_returns_401(client):
     create_user(client)
     expired_token = jwt.encode(
-        {"sub": "julia@test.com", "exp": datetime.now(timezone.utc) - timedelta(minutes=1)},
+        {"sub": "juliana@test.com", "exp": datetime.now(timezone.utc) - timedelta(minutes=1)},
         settings.SECRET_KEY,
         algorithm=settings.TOKEN_ALGORITHM,
     )
