@@ -23,7 +23,7 @@ class Settings(BaseSettings):
 
     API_PREFIX: str = ""
     TOKEN_ALGORITHM: str = "HS256"
-    SECRET_KEY: str
+    SECRET_KEY: str = Field(min_length=32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
     FRONTEND_URL: str = "http://localhost:4200"
     ENVIRONMENT: Literal[
