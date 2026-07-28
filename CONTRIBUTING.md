@@ -36,6 +36,14 @@ db: cria migration para tabela de usuários
 - Ao alterar contratos de API, atualize schemas, services e exemplos de
   requests relacionados.
 - Ao alterar modelos persistidos, crie ou atualize migrations do Alembic.
+- `get_db_session` não comita automaticamente: quem escreve no banco deve
+  chamar `db_session.commit()` explicitamente antes de retornar (veja
+  `UserService.create`), ou a escrita é revertida silenciosamente quando a
+  sessão fecha.
+- Rotas são `def`, não `async def` — use `async def` só se o corpo da rota
+  genuinamente usar `await`; caso contrário o FastAPI já roda `def` em
+  threadpool, o que evita bloquear o event loop com chamadas síncronas
+  (bcrypt, SQLAlchemy).
 
 ## Validação
 

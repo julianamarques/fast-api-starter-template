@@ -13,15 +13,10 @@ router = APIRouter()
 
 
 @router.get("/check", response_model=ApiResponse[str])
-async def health_check() -> ApiResponse[str]:
-    return ApiResponse(content="Up!")
-
-
-@router.get("/ready", response_model=ApiResponse[str])
-async def readiness_check(db_session: Session = Depends(get_db_session)) -> ApiResponse[str]:
+async def health_check(db_session: Session = Depends(get_db_session)) -> ApiResponse[str]:
     try:
         db_session.execute(text("SELECT 1"))
+
+        return ApiResponse[str](content="Up!")
     except SQLAlchemyError:
         exceptions_utils.raise_service_unavailable(ApiMessageEnum.EXTERNAL_UNAVAILABLE_SERVICE.value)
-
-    return ApiResponse(content="Ready!")

@@ -1,3 +1,5 @@
+import uuid
+
 from sqlalchemy.exc import IntegrityError
 
 from app.core.database_config import Session
@@ -37,9 +39,16 @@ class UserService:
         try:
             self.db_session.flush()
         except IntegrityError:
+            self.db_session.rollback()
             exceptions_utils.raise_bad_request(ApiMessageEnum.USER_EMAIL_EXISTS.value)
 
-        return UserResponseSchema.from_model(user)
+        response = UserResponseSchema.from_model(user)
+        self.db_session.commit()
+
+        return response
 
     def find_user_by_email(self, email: str) -> User | None:
         return self.db_session.query(User).filter_by(email=email).first()
+
+    def find_user_by_id(self, user_id: uuid.UUID) -> User | None:
+        return self.db_session.query(User).filter_by(id=user_id).first()

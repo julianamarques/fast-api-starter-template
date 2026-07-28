@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timezone
 
 import jwt
@@ -28,7 +29,7 @@ class AuthService:
         if not user or not is_password_valid or not user.active:
             exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_USER_PASSWORD.value)
 
-        token_data = token_utils.encode(username=user.email)
+        token_data = token_utils.encode(subject=str(user.id))
 
         return AuthUserResponseSchema(
             access_token=token_data["access_token"],
@@ -42,7 +43,13 @@ class AuthService:
     ) -> AuthUserResponseSchema:
         try:
             token_data = token_utils.decode(access_token)
-            user: User | None = self.user_service.find_user_by_email(token_data["sub"])
+
+            try:
+                user_id = uuid.UUID(token_data["sub"])
+            except (ValueError, TypeError):
+                exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
+
+            user: User | None = self.user_service.find_user_by_id(user_id)
 
             if not user:
                 exceptions_utils.raise_unauthorized(ApiMessageEnum.INVALID_TOKEN.value)
@@ -50,11 +57,11 @@ class AuthService:
             if not user.active:
                 exceptions_utils.raise_unauthorized(ApiMessageEnum.INACTIVE_USER.value)
 
-            expire_date: str = datetime.fromtimestamp(token_data["exp"], tz=timezone.utc).isoformat()
+            expire_at = datetime.fromtimestamp(token_data["exp"], tz=timezone.utc)
 
             return AuthUserResponseSchema(
                 access_token=access_token,
-                expires_in=expire_date,
+                expires_in=token_utils.seconds_until(expire_at),
                 user_data=UserResponseSchema.from_model(user)
             )
         except jwt.ExpiredSignatureError:

@@ -14,17 +14,7 @@ def test_health_check(client):
     assert body["message"] == "Requisição concluída"
     assert body["content"] == "Up!"
 
-
-def test_readiness_check_returns_ready_when_database_is_reachable(client):
-    response = client.get(f"{API_PREFIX}/health/ready")
-
-    assert response.status_code == 200
-    body = response.json()
-    assert body["status_code"] == 200
-    assert body["content"] == "Ready!"
-
-
-def test_readiness_check_returns_503_when_database_is_unreachable(client):
+def test_health_check_returns_503_when_database_is_unreachable(client):
     def unavailable_db():
         class _Unavailable:
             def execute(self, *_args, **_kwargs):
@@ -38,7 +28,6 @@ def test_readiness_check_returns_503_when_database_is_unreachable(client):
 
     assert response.status_code == 503
     assert response.json()["message"] == "Serviço externo indisponível"
-
 
 def test_unknown_route_returns_standard_404(client):
     response = client.get(f"{API_PREFIX}/does-not-exist")

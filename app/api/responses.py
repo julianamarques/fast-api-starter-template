@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Any, Generic, Optional, TypeVar
+from typing import Generic, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 from starlette import status
@@ -22,14 +22,14 @@ class ApiResponse(BaseModel, Generic[T]):
     content: Optional[T] = None
 
 
-class ApiExceptionResponse(JSONResponse):
+class ApiExceptionResponse(JSONResponse, Generic[T]):
     def __init__(
             self,
             status_code: int = status.HTTP_500_INTERNAL_SERVER_ERROR,
             message: str = ApiMessageEnum.UNKNOWN_ERROR.value,
             *,
             path: str = "",
-            body: Optional[Any] = None,
+            body: Optional[T] = None,
             headers: Optional[dict] = None
     ):
         data = {

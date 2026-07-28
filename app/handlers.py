@@ -16,11 +16,11 @@ log = logging.getLogger(__name__)
 async def http_exception_handler(
         request: Request,
         exception: Union[HTTPException, Exception]
-) -> ApiExceptionResponse:
+) -> ApiExceptionResponse[list[str | None]]:
     if exception.status_code == status.HTTP_404_NOT_FOUND:
         log.error(f"Route {request.url.path} not found: {exception.detail}")
 
-        return ApiExceptionResponse(
+        return ApiExceptionResponse[list[str | None]](
             status_code=exception.status_code,
             message=ApiMessageEnum.ROUTE_NOT_FOUND.value,
             path=request.url.path
@@ -28,7 +28,7 @@ async def http_exception_handler(
     elif exception.status_code == status.HTTP_400_BAD_REQUEST:
         log.error(f"Invalid request for this route {request.url.path}: {exception.detail}")
 
-        return ApiExceptionResponse(
+        return ApiExceptionResponse[list[str | None]](
             status_code=exception.status_code,
             message=ApiMessageEnum.INVALID_REQUEST.value,
             path=request.url.path,
@@ -37,7 +37,7 @@ async def http_exception_handler(
     elif exception.status_code == status.HTTP_405_METHOD_NOT_ALLOWED:
         log.error(f"Method {request.method} not allowed for this route {request.url.path}")
 
-        return ApiExceptionResponse(
+        return ApiExceptionResponse[list[str | None]](
             status_code=exception.status_code,
             message=ApiMessageEnum.NOT_ALLOWED_METHOD.value,
             path=request.url.path,
@@ -46,7 +46,7 @@ async def http_exception_handler(
     elif exception.status_code == status.HTTP_401_UNAUTHORIZED:
         log.error(f"Access denied for this route {request.url.path}")
 
-        return ApiExceptionResponse(
+        return ApiExceptionResponse[list[str | None]](
             status_code=exception.status_code,
             message=ApiMessageEnum.ACCESS_DENIED.value,
             path=request.url.path,
@@ -54,17 +54,17 @@ async def http_exception_handler(
             headers={"WWW-Authenticate": "Bearer"}
         )
 
-    return ApiExceptionResponse(
+    return ApiExceptionResponse[list[str | None]](
         status_code=exception.status_code,
         path=request.url.path,
-        message=exception.detail,
+        message=exception.detail or ApiMessageEnum.UNKNOWN_ERROR.value,
     )
 
 
 async def validation_exception_handler(
         request: Request,
         exception: Union[RequestValidationError, Exception]
-) -> ApiExceptionResponse:
+) -> ApiExceptionResponse[str]:
     errors = []
     safe_log_errors = []
 
@@ -83,9 +83,9 @@ async def validation_exception_handler(
         safe_log_errors,
     )
 
-    body = f"Invalid arguments [{errors}]"
+    body = f"Invalid arguments [{', '.join(errors)}]"
 
-    return ApiExceptionResponse(
+    return ApiExceptionResponse[str](
         status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
         message=ApiMessageEnum.INVALID_ARGUMENT.value,
         path=request.url.path,
@@ -96,13 +96,13 @@ async def validation_exception_handler(
 async def internal_server_error_exception_handler(
         request: Request,
         exception: Exception
-) -> ApiExceptionResponse:
+) -> ApiExceptionResponse[None]:
     log.error(
         f"Internal server error: {request.url.path}",
         exc_info=exception
     )
 
-    return ApiExceptionResponse(
+    return ApiExceptionResponse[None](
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         message=ApiMessageEnum.UNKNOWN_ERROR.value,
         path=request.url.path
