@@ -11,7 +11,7 @@ def test_login_normalizes_email_and_returns_token(client, db_session_factory):
     response = login(client, email="  JULIANA@test.com ")
 
     assert response.status_code == 200
-    content = response.json()
+    content = response.json()["content"]
     assert content["token_type"] == "bearer"
     assert content["user_data"]["email"] == "juliana@test.com"
     assert "password" not in content["user_data"]

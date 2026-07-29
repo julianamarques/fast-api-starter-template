@@ -25,7 +25,7 @@ def test_health_check_returns_503_when_database_is_unreachable(client):
 
     app.dependency_overrides[get_db_session] = unavailable_db
 
-    response = client.get(f"{API_PREFIX}/health/ready")
+    response = client.get(f"{API_PREFIX}/health/check")
 
     assert response.status_code == 503
     assert response.json()["message"] == "Serviço externo indisponível"

@@ -17,7 +17,7 @@ def make_token(sub: str, exp: datetime) -> str:
 
 def test_me_returns_authenticated_user(client):
     create_user(client)
-    token = login(client).json()["access_token"]
+    token = login(client).json()["content"]["access_token"]
 
     response = get_me(client, token)
 
@@ -62,7 +62,7 @@ def test_me_with_expired_token_returns_401(client):
 
 def test_me_with_token_of_deleted_user_returns_401(client, db_session_factory):
     create_user(client)
-    token = login(client).json()["access_token"]
+    token = login(client).json()["content"]["access_token"]
     with db_session_factory() as session:
         session.query(User).delete()
         session.commit()
