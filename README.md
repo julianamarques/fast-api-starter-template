@@ -48,8 +48,10 @@ sed -i '' "s|^SECRET_KEY=.*|SECRET_KEY=$(openssl rand -base64 64 | tr -d '\n')|"
 
 ### 📦 Instalando Dependências
 
+Instale as dependências e em seguida ative o ambiente virtual com os comandos:
+
 ```sh
-poetry install
+poetry install && source "$(poetry env info --path)/bin/activate"
 ```
 
 ### 💾 Inicializando a Base de Dados
@@ -82,17 +84,18 @@ docker compose run --rm migrations
 
 ## 🧪 Executando os Testes
 
+Você pode executar os testes da aplicação com o comando:
+
 ```sh
 poetry run pytest
 ```
 
 ## ✅ Lint
 
-Você pode verificar a qualidade e o padrão de formatação do código através dos comandos:
+Você pode verificar a qualidade e o padrão de formatação do código através do comando:
 
 ```sh
-poetry run pylint app tests
-poetry run flake8
+poetry run pylint app tests && poetry run flake8
 ```
 
 ## 📖 Documentação da API (Swagger)
