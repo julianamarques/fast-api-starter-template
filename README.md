@@ -39,7 +39,12 @@ Projeto template com algumas configurações comuns já feitas e autenticação 
 
 ## 🛠️ Como Configurar?
 
-Renomeie o arquivo `.env.example` para `.env` e altere as configurações para as da sua máquina local
+Renomeie o arquivo `.env.example` para `.env`, altere as configurações para as da sua máquina local e gere uma `SECRET_KEY` com o comando:
+
+```sh
+sed -i "s|^SECRET_KEY=.*|SECRET_KEY=$(openssl rand -base64 64 | tr -d '\n')|" .env # LINUX
+sed -i '' "s|^SECRET_KEY=.*|SECRET_KEY=$(openssl rand -base64 64 | tr -d '\n')|" .env # MACOS
+```
 
 ### 📦 Instalando Dependências
 
