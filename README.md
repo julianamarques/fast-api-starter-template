@@ -48,7 +48,7 @@ sed -i '' "s|^SECRET_KEY=.*|SECRET_KEY=$(openssl rand -base64 64 | tr -d '\n')|"
 
 ### 📦 Instalando Dependências
 
-Instale as dependências e em seguida ative o ambiente virtual com os comandos:
+Instale as dependências e em seguida ative o ambiente virtual com o comando:
 
 ```sh
 poetry install && source "$(poetry env info --path)/bin/activate"
