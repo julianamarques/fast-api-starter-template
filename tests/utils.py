@@ -4,7 +4,7 @@ from httpx2 import Response
 from app.core.app_config import settings
 
 API_PREFIX = settings.API_PREFIX
-DEFAULT_EMAIL = "julia@test.com"
+DEFAULT_EMAIL = "juliana@test.com"
 DEFAULT_PASSWORD = "senha-123456"
 
 

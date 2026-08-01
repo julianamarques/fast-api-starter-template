@@ -23,9 +23,9 @@ class Settings(BaseSettings):
 
     API_PREFIX: str = ""
     TOKEN_ALGORITHM: str = "HS256"
-    SECRET_KEY: str
+    SECRET_KEY: str = Field(min_length=32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
-    FRONTEND_URL: str = "http://localhost:4200"
+    FRONTEND_URL: str = ""
     ENVIRONMENT: Literal[
         "production",
         "development",
@@ -37,7 +37,28 @@ class Settings(BaseSettings):
 
     @property
     def all_cors_origins(self) -> list[str]:
-        return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [self.FRONTEND_URL]
+        origins = [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS]
+
+        if self.FRONTEND_URL:
+            origins.append(self.FRONTEND_URL.rstrip("/"))
+
+        return origins
+
+    @property
+    def is_production(self) -> bool:
+        return self.ENVIRONMENT == "production"
+
+    @property
+    def openapi_url(self) -> str | None:
+        return None if self.is_production else f"{self.API_PREFIX}/openapi.json"
+
+    @property
+    def docs_url(self) -> str | None:
+        return None if self.is_production else "/docs"
+
+    @property
+    def redoc_url(self) -> str | None:
+        return None if self.is_production else "/redoc"
 
     PROJECT_NAME: str = "Fast API Starter Template"
     VERSION: str = "0.1.0"

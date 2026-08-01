@@ -12,7 +12,7 @@ class ApiMessageEnum(Enum):
     UNKNOWN_ERROR = "Erro desconhecido"
     EXTERNAL_UNAVAILABLE_SERVICE = "Serviço externo indisponível"
     NOT_ALLOWED_METHOD = "Método não permitido"
-    INVALID_TOKEN = "Token invalido"
+    INVALID_TOKEN = "Token inválido"
     EXPIRED_TOKEN = "Token expirado"
     USER_NOT_FOUND = "Usuário não encontrado"
     INACTIVE_USER = "Usuário inativo"

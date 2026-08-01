@@ -28,7 +28,6 @@ def client_fixture(db_session_factory):
     def override_get_db_session():
         with db_session_factory() as session:
             yield session
-            session.commit()
 
     app.dependency_overrides[get_db_session] = override_get_db_session
 

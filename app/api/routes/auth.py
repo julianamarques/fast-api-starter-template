@@ -32,7 +32,7 @@ async def login(
 
     data = auth_service.login(schema=schema)
 
-    return ApiResponse(
+    return ApiResponse[AuthUserResponseSchema](
         content=data,
     )
 
@@ -49,7 +49,7 @@ async def create_user(
     user_service = UserService(db_session=db_session)
     data = user_service.create(schema=schema)
 
-    return ApiResponse(
+    return ApiResponse[UserResponseSchema](
         status_code=status.HTTP_201_CREATED,
         content=data,
     )
@@ -59,6 +59,6 @@ async def create_user(
 async def get_auth_user(
         auth_user_response: AuthUserResponseSchema = Depends(auth_user)
 ) -> ApiResponse[AuthUserResponseSchema]:
-    return ApiResponse(
+    return ApiResponse[AuthUserResponseSchema](
         content=auth_user_response,
     )

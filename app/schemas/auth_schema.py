@@ -26,5 +26,5 @@ class LoginRequestSchema(BaseModel):
 class AuthUserResponseSchema(BaseModel):
     access_token: str
     token_type: str = "bearer"
-    expires_in: str
+    expires_in: int
     user_data: UserResponseSchema

@@ -21,36 +21,34 @@ class UserService:
         self.db_session = db_session
 
     def create(self, schema: UserCreateRequestSchema) -> UserResponseSchema:
+        _validate_password(schema.password, schema.confirm_password)
+
+        email: str = schema.email.lower().strip()
+
+        if self.find_user_by_email(email):
+            exceptions_utils.raise_bad_request(ApiMessageEnum.USER_EMAIL_EXISTS.value)
+
+        user: User = User(
+            name=schema.name.strip(),
+            email=email,
+            password=encrypt_password_utils.hash_password(schema.password),
+        )
+
+        self.db_session.add(user)
+
         try:
-            _validate_password(schema.password, schema.confirm_password)
-
-            encrypted_password: str = encrypt_password_utils.hash_password(schema.password)
-            user: User = User(
-                name=schema.name.strip(),
-                email=schema.email.lower().strip(),
-                password=encrypted_password,
-            )
-
-            self.db_session.add(user)
             self.db_session.flush()
+        except IntegrityError:
+            self.db_session.rollback()
+            exceptions_utils.raise_bad_request(ApiMessageEnum.USER_EMAIL_EXISTS.value)
 
-            return UserResponseSchema.from_model(user)
-        except IntegrityError as error:
-            error_message = str(error).lower()
-            is_email_exists_error: bool = "unique constraint" in error_message and "email" in error_message
+        response = UserResponseSchema.from_model(user)
+        self.db_session.commit()
 
-            if is_email_exists_error:
-                exceptions_utils.raise_bad_request(ApiMessageEnum.USER_EMAIL_EXISTS.value)
-
-            raise
-
-    def find_user_by_id(self, user_id: str) -> User:
-        user: User = self.db_session.query(User).filter_by(id=uuid.UUID(user_id)).first()
-
-        if not user:
-            exceptions_utils.raise_not_found(ApiMessageEnum.USER_NOT_FOUND.value)
-
-        return user
+        return response
 
     def find_user_by_email(self, email: str) -> User | None:
         return self.db_session.query(User).filter_by(email=email).first()
+
+    def find_user_by_id(self, user_id: uuid.UUID) -> User | None:
+        return self.db_session.query(User).filter_by(id=user_id).first()
